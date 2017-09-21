@@ -1,4 +1,7 @@
 %% Problem 1. 
+
+% Walter Frank Lenoir
+
 % in the repository you will find the meannonan.m function we discussed in
 % class which produced the mean of a vector of numbers that ignores values
 % of NaN or Inf. 
@@ -15,15 +18,25 @@ zz = meannonan(xx);
 %zz is a single number (the average of all non-NaN entries in xx). Explain
 %this behavior. 
 
+% meannonan has a conditional built in that checks for nan or inf in the input and sets
+% the nan or inf values to []. This also sets the input x to be a single
+% row (in this case a 1 row x 24 columns double). With no nan or inf values and the input set to be a single row, 
+% meannonan can return a absolute mean of all present numbers. 
+
 % Part 2. Modify the meannonan code so that it behaves as the mean function
 % and produces a row vector where each entry is the average of each column
 % and in the column with a NaN, this NaN is ignored. 
 
+matmeans = meannonan(xx);
+
 %% Problem 2. ORFs using functions
+% Walter Frank Lenoir
 % In this problem we will use functions to simplify and extend our code from HW1, prob 2 
 
 % Part 1. Fill in the function randdnaseq.m in this repository so that it returns a random sequence
 % of length N. 
+
+rand_seq = randdnaseq(10000);
 
 % Part 2. Fill in the function findORF.m in this repository so that takes any dna
 % sequence as an input and returns the length of the longest open
@@ -33,22 +46,48 @@ zz = meannonan(xx);
 % sequence is uppercase, lowercase, or some mixture. The builtin MATLAB functions
 % lower and upper could be useful for this. 
 
+[ORFlength, start_pos, stop_pos] = findORF(rand_seq);
+
 % Part 3. Write another function called probabilityORF that utilizes the functions from 
 % Parts 1 and 2. It should take two inputs - a sequence length (N) and an length  of an ORF (N_ORF) and
-% returns the probability that that a sequence of length N contains an ORF
+% returns the probability that a sequence of length N contains an ORF
 % of at least length N_ORF
 
-% Part4. Write  a final function called plotProbabilityORF.m which takes
+N_ORF = 10;
+N = 100;
+probability = probabilityORF(N,N_ORF);
+
+% Part 4. Write  a final function called plotProbabilityORF.m which takes
 % N_ORF as an argument and makes a plot of the probabily of having an
 % ORF at least this long as a function of the dnasequence length. Decide how the
 % code should determine the lengths of dna sequence to test and implement
 % your decision. 
 
+%N = the final length tested, Iterates through sequences as follows: 1:3:N,
+%this takes 3 sequences at a time, adding a new codon frame every
+%iteration. 
+
+plotprobabilityORF(N,N_ORF);
+
 % Part 5. Write code that uses your function from part 4 to make a single
 % plot with separate curves for ORF lengths 100,200,300,and 400. Make sure
 % your plot has appropriate axis labels and legend. 
+N = 1000;
+figure;
+plotprobabilityORF(N,100);
+hold on;
+plotprobabilityORF(N,200);
+hold on;
+plotprobabilityORF(N,300);
+hold on;
+plotprobabilityORF(N,400);
+legend('100','200','300','400');
+xlabel('Sequence Length');
+ylabel('Probability');
+hold off;
 
 %% Problem 3. Codon translation and optimization
+%Walter Frank Lenoir
 
 % DNA sequence gets translated into protein through a code known as the
 % genetic code. Every sequence of 3 base pairs (a codon) is translated into
@@ -61,6 +100,9 @@ zz = meannonan(xx);
 % translation should start from the 1st, 2nd or 3rd base pair (that is,
 % which reading frame to use). Make your code returns an error and
 % appropriate message if frame isn't 1,2, or 3. 
+dnaseq = randdnaseq(100);
+frame = 1;
+proteinseq = dna2protein(dnaseq,frame);
 
 
 % Part 2. Write code to turn your protein sequence back into DNA sequence.
@@ -68,6 +110,8 @@ zz = meannonan(xx);
 % Notice that there isn't a unique way to do this. For example, there are 4
 % different codons that correspond to the amino acid Gly. For a first pass,
 % choose one of these codons at random.
+
+dnaseq = protein2dna(proteinseq);
 %
 % Part 3. The third column of the codons.csv file contains the frequency of
 % this codon's use in the human proteome in units of number of appearances per
@@ -82,4 +126,7 @@ zz = meannonan(xx);
 % information in the third column of codons.csv. 
 % In other words, for any amino acid, it always uses the codon that appears
 % most frequently in the human proteome. 
+
+dnaseq = protein2dnaOptimized(proteinseq);
+
 %
